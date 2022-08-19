@@ -13,7 +13,6 @@ discordBot.on('interactionCreate', async interaction => {
     const { commandName } = interaction;
     if (commandName === 'disgram') {
         if (interaction.options.getSubcommand("set")) {
-            console.log(interaction.options.getSubcommand("set").getString());
             db.DiscordChannel.create({
                 channelId: interaction.channelId,
                 channelName: discordBot.channels.cache.get(interaction.channelId).name,
