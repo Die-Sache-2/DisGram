@@ -12,17 +12,24 @@ discordBot.on('interactionCreate', async interaction => {
 
     const { commandName } = interaction;
     if (commandName === 'disgram') {
-        if (interaction.options.getSubcommand("set")) {
+        if (interaction.options.getSubcommand() === 'set') {
             db.DiscordChannel.create({
                 channelId: interaction.channelId,
                 channelName: discordBot.channels.cache.get(interaction.channelId).name,
-                subscriptionIdentifier: interaction.options.getSubcommand("set").getString()
+                subscriptionIdentifier: interaction.options.getString("id") ?? discordBot.channels.cache.get(interaction.channelId).name
             });
             await interaction.reply({
-                content: interaction.options.getString("set"),
+                content: "Dieser Kanal ist nun abonnierbar!",
                 ephemeral: true
             }
             );
+        }
+        if (interaction.options.getSubcommand() === 'unset') {
+            db.DiscordChannel.destroy({
+                where: {
+                    channelId: interaction.channelId
+                }
+            });
         }
     }
 });
@@ -30,11 +37,12 @@ discordBot.on('interactionCreate', async interaction => {
 
 telegramBot.on("channel_post", async ctx => {
     console.log(ctx.update.channel_post.text);
-    let channel_post = ctx.update.channel_post
+    let channel_post = ctx.update.channel_post;
+    let telegramChannelId = ctx.update.channel_post.chat.id.toString();
     if (channel_post.text.startsWith("/disgram ")) {
         let commandParts = channel_post.text.split(' ');
         if (commandParts[1] === "subscribe") {
-            let telegramChannelId = ctx.update.channel_post.chat.id.toString();
+
             let subscriptionIdentifier = commandParts[2];
             await db.TelegramChannel.create({
                 channelId: telegramChannelId,
@@ -53,6 +61,24 @@ telegramBot.on("channel_post", async ctx => {
             db.Subscription.create({
                 TelegramChannelId: telegramChannel.dataValues.id,
                 DiscordChannelId: discordChannel.dataValues.id
+            });
+        }
+        if (commandParts[1] === "unsubscribe") {
+            let telegramChannel = await db.TelegramChannel.findOne({
+                where: {
+                    channelId: telegramChannelId
+                }
+            });
+            let discordChannel = await db.DiscordChannel.findOne({
+                where: {
+                    subscriptionIdentifier: commandParts[2]
+                }
+            });
+            db.Subscription.destroy({
+                where: {
+                    TelegramChannelId: telegramChannel.dataValues.id,
+                    DiscordChannelId: discordChannel.dataValues.id
+                }
             });
         }
     }

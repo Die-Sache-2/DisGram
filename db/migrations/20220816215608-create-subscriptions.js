@@ -14,6 +14,7 @@ module.exports = {
           model: 'DiscordChannels',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       TelegramChannelId: {
         type: Sequelize.INTEGER,

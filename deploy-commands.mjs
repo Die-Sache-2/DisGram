@@ -4,7 +4,7 @@ import { REST } from '@discordjs/rest';
 
 const commands = [
     new SlashCommandBuilder().setName('disgram').setDescription('Replies disgram!')
-        .addSubcommand(subcommand => subcommand.setName("set").setDescription("set").addStringOption("id"))
+        .addSubcommand(subcommand => subcommand.setName("set").setDescription("set").addStringOption(option => option.setName("id").setDescription("Set subsciption identifier")))
         .addSubcommand(subcommand => subcommand.setName("unset").setDescription("unset"))
 ]
     .map(command => command.toJSON());

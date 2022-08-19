@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            this.belongsTo(models.DiscordChannel);
+            this.belongsTo(models.DiscordChannel, {
+                foreignKeyConstraint: true,
+                onDelete: 'CASCADE'
+            });
             this.belongsTo(models.TelegramChannel);
         }
     }
