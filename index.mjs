@@ -44,10 +44,17 @@ telegramBot.on("channel_post", async ctx => {
         if (commandParts[1] === "subscribe") {
 
             let subscriptionIdentifier = commandParts[2];
-            await db.TelegramChannel.create({
-                channelId: telegramChannelId,
-                name: ctx.update.channel_post.chat.title
-            });
+            let count = await db.TelegramChannel.count({
+                where: {
+                    channelId: telegramChannelId
+                }
+            })
+            if (!count) {
+                await db.TelegramChannel.create({
+                    channelId: telegramChannelId,
+                    name: ctx.update.channel_post.chat.title
+                });
+            }
             let telegramChannel = await db.TelegramChannel.findOne({
                 where: {
                     channelId: telegramChannelId
@@ -58,7 +65,7 @@ telegramBot.on("channel_post", async ctx => {
                     subscriptionIdentifier: subscriptionIdentifier
                 }
             });
-            db.Subscription.create({
+            await db.Subscription.create({
                 TelegramChannelId: telegramChannel.dataValues.id,
                 DiscordChannelId: discordChannel.dataValues.id
             });
