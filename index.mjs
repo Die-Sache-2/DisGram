@@ -1,39 +1,10 @@
 import 'dotenv/config';
-import { Client, GatewayIntentBits } from 'discord.js';
 import db from './db/models/index.js';
-import { Telegraf } from 'telegraf';
+import { discordBot, telegramBot } from './bots/index.mjs';
+import { interactionCreate, messageCreate } from './events/index.mjs';
 
-let discordBot = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-let telegramBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
-discordBot.on('interactionCreate', async interaction => {
-
-    if (!interaction.isChatInputCommand()) return;
-
-    const { commandName } = interaction;
-    if (commandName === 'disgram') {
-        if (interaction.options.getSubcommand() === 'set') {
-            db.DiscordChannel.create({
-                channelId: interaction.channelId,
-                channelName: discordBot.channels.cache.get(interaction.channelId).name,
-                subscriptionIdentifier: interaction.options.getString("id") ?? discordBot.channels.cache.get(interaction.channelId).name
-            });
-            await interaction.reply({
-                content: "Dieser Kanal ist nun abonnierbar!",
-                ephemeral: true
-            }
-            );
-        }
-        if (interaction.options.getSubcommand() === 'unset') {
-            db.DiscordChannel.destroy({
-                where: {
-                    channelId: interaction.channelId
-                }
-            });
-        }
-    }
-});
-
+discordBot.on('interactionCreate', interactionCreate);
+discordBot.on("messageCreate", messageCreate);
 
 telegramBot.on("channel_post", async ctx => {
     console.log(ctx.update.channel_post.text);
@@ -91,33 +62,7 @@ telegramBot.on("channel_post", async ctx => {
     }
 })
 
-discordBot.on("messageCreate", async message => {
-    let subscriptionPromise = await db.Subscription.findAll({
-        include: [
-            {
-                model: db.DiscordChannel,
-                attributes: ["channelId"]
-            },
-            {
-                model: db.TelegramChannel,
-                attributes: ["channelId"]
-            },
 
-        ]
-    })
-
-    let subscriptions = subscriptionPromise.map(it => it.dataValues).map(it => ({
-        discordChannelId: it.DiscordChannel.dataValues.channelId,
-        telegramChannelId: it.TelegramChannel.dataValues.channelId
-    }));
-
-    for (let subscription of subscriptions) {
-        let { telegramChannelId, discordChannelId } = subscription;
-        if (message.channelId === discordChannelId) {
-            telegramBot.telegram.sendMessage(telegramChannelId, message.content);
-        }
-    }
-})
 
 telegramBot.command("disgram", ctx => {
     console.log("COMMAND");
