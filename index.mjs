@@ -5,6 +5,7 @@ import { interactionCreate, messageCreate } from './events/index.mjs';
 
 discordBot.on('interactionCreate', interactionCreate);
 discordBot.on("messageCreate", messageCreate);
+discordBot.login(process.env.DISCORD_BOT_TOKEN);
 
 telegramBot.on("channel_post", async ctx => {
     console.log(ctx.update.channel_post.text);
@@ -70,6 +71,6 @@ telegramBot.command("disgram", ctx => {
 })
 
 telegramBot.launch();
-discordBot.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
