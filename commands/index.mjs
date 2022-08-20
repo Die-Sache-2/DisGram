@@ -1,8 +1,4 @@
-import set from './set.mjs';
-import unset from './unset.mjs';
-import { Collection } from 'discord.js';
+import discordCommands from './discord/index.mjs';
+import telegramCommands from './telegram/index.mjs';
 
-let commands = new Collection();
-commands.set('set', set);
-commands.set('unset', unset);
-export default commands;
+export { discordCommands, telegramCommands };

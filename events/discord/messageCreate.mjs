@@ -1,5 +1,5 @@
-import db from '../db/models/index.js';
-import { telegramBot } from '../bots/index.mjs';
+import db from '../../db/models/index.js';
+import { telegramBot } from '../../bots/index.mjs';
 
 let messageCreate = async message => {
     let subscriptionPromise = await db.Subscription.findAll({

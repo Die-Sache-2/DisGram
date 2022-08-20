@@ -1,4 +1,4 @@
-import messageCreate from "./messageCreate.mjs";
-import interactionCreate from "./interactionCreate.mjs";
+import discordEvents from './discord/index.mjs';
+import telegramEvents from './telegram/index.mjs';
 
-export { messageCreate, interactionCreate };
+export {discordEvents, telegramEvents};
