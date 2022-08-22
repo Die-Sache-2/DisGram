@@ -1,5 +1,5 @@
-import set from './set.mjs';
-import unset from './unset.mjs';
+import set from './set.command.mjs';
+import unset from './unset.command.mjs';
 import { Collection } from 'discord.js';
 
 let commands = new Collection();

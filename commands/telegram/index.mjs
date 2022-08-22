@@ -1,5 +1,5 @@
-import subscribe from './subscribe.mjs';
-import unsubscribe from './unsubscribe.mjs';
+import subscribe from './subscribe.command.mjs';
+import unsubscribe from './unsubscribe.command.mjs';
 import { Collection } from 'discord.js';
 
 let commands = new Collection();
