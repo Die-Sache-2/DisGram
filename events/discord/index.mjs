@@ -1,5 +1,5 @@
-import messageCreate from "./messageCreate.mjs";
-import interactionCreate from "./interactionCreate.mjs";
+import messageCreate from "./messageCreate.event.mjs";
+import interactionCreate from "./interactionCreate.event.mjs";
 
 let events = {
     messageCreate, interactionCreate

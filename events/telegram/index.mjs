@@ -1,5 +1,5 @@
-import channelPost from "./channelPost.mjs";
-import disgramCommand from "./disgramCommand.mjs";
+import channelPost from "./channelPost.event.mjs";
+import disgramCommand from "./disgramCommand.event.mjs";
 
 let events = {
     channelPost,
