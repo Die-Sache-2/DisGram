@@ -1,4 +1,4 @@
-import db from '../../db/models/index.mjs';
+import db from '../../db/index.mjs';
 import { discordBot } from '../../bots/index.mjs';
 
 

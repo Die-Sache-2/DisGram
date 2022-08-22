@@ -1,4 +1,4 @@
-import db from '../../db/models/index.mjs';
+import db from '../../db/index.mjs';
 import { telegramBot } from '../../bots/index.mjs';
 
 let messageCreate = async message => {
