@@ -1,4 +1,4 @@
-import db from '../../db/models/index.js';
+import db from '../../db/models/index.mjs';
 
 let unset = {
     execute: async interaction => {
