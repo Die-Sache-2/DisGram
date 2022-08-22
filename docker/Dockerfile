@@ -10,8 +10,4 @@ RUN npm install
 
 COPY .. .
 
-#RUN npx wait-port db:5432
-
-#RUN npm run db:migrate:up
-
-CMD ["node", "index.mjs"]
+CMD ["npm", "start"]

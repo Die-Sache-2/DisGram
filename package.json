@@ -4,7 +4,7 @@
   "description": "Bridge between discord and telegram channels",
   "main": "index.mjs",
   "scripts": {
-    "start": "npm db:migrate:up & node index.mjs",
+    "start": "npm run db:migrate:up & node index.mjs",
     "db:migrate:up": "npx sequelize-cli db:migrate --config ./db/config/config.json --migrations-path ./db/migrations",
     "deploy-commands": "node deploy-commands.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
