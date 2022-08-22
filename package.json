@@ -5,6 +5,7 @@
   "main": "index.mjs",
   "scripts": {
     "start": "docker compose -f ./docker/docker-compose.yml up -d",
+    "stop": "docker compose -f ./docker/docker-compose.yml down",
     "build": "docker compose -f ./docker/docker-compose.yml build",
     "deploy-commands": "node ./commands/discord/deploy-commands.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
