@@ -3,17 +3,20 @@
 const Sequelize = require('sequelize');
 
 async function up({ context: queryInterface }) {
-  await queryInterface.createTable('TelegramChannels', {
+  await queryInterface.createTable('DiscordChannels', {
     id: {
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID,
     },
     channelId: {
       type: Sequelize.STRING
     },
-    name: {
+    channelName: {
+      type: Sequelize.STRING
+    },
+    subscriptionIdentifier: {
       type: Sequelize.STRING
     },
     createdAt: {
@@ -28,7 +31,7 @@ async function up({ context: queryInterface }) {
 }
 
 async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('TelegramChannels');
+  await queryInterface.dropTable('DiscordChannels');
 }
 
 module.exports = { up, down };

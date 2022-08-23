@@ -1,6 +1,6 @@
 'use strict';
 
-import { Model } from 'sequelize';
+import Sequelize, { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
     class Subscription extends Model {
@@ -10,10 +10,16 @@ export default (sequelize, DataTypes) => {
                 onDelete: 'CASCADE'
             });
             this.belongsTo(models.TelegramChannel);
+            this.belongsTo(models.TelegramUser);
         }
     }
     Subscription.init({
-
+        id: {
+            allowNull: false,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true,
+            type: Sequelize.UUID,
+        },
     }, {
         sequelize,
         modelName: 'Subscription',

@@ -7,7 +7,7 @@ let disgramCommand = async ctx => {
 
     let command = telegramCommands.get(commandName);
     command.execute(ctx);
-    ctx.reply("Der angegebene Kanal hat nun den gewünschten Discord Kanal abonniert!");
+
 }
 
 export default disgramCommand;

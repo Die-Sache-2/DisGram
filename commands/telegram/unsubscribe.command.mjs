@@ -17,7 +17,7 @@ let unsubscribe = {
                 subscriptionIdentifier
             }
         });
-        db.Subscription.destroy({
+        await db.Subscription.destroy({
             where: {
                 TelegramChannelId: telegramChannel.dataValues.id,
                 DiscordChannelId: discordChannel.dataValues.id

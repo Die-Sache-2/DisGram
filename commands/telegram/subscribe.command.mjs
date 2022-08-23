@@ -7,12 +7,23 @@ let subscribe = {
         let [, , subscriptionIdentifier, inputTelegramChannelId] = channel_post.text.split(' ');
         let telegramChannelId = inputTelegramChannelId ?? channel_post.chat.id.toString();
 
-        let count = await db.TelegramChannel.count({
+        let userCount = await db.TelegramUser.count({
+            where: {
+                userId:  ctx.update.message.from.id
+            }
+        })
+
+        if(!userCount){
+            ctx.reply('Fehlende Berechtigungen für diesen Befehl!');
+            return;
+        }
+
+        let channelCount = await db.TelegramChannel.count({
             where: {
                 channelId: telegramChannelId
             }
         })
-        if (!count) {
+        if (!channelCount) {
             await db.TelegramChannel.create({
                 channelId: telegramChannelId,
                 name: channel_post.chat.title
@@ -32,6 +43,7 @@ let subscribe = {
             TelegramChannelId: telegramChannel.dataValues.id,
             DiscordChannelId: discordChannel.dataValues.id
         });
+        ctx.reply("Der angegebene Kanal hat nun den gewünschten Discord Kanal abonniert!");
     }
 }
 export default subscribe;

@@ -6,6 +6,7 @@ const commands = [
     new SlashCommandBuilder().setName('disgram').setDescription('Replies disgram!')
         .addSubcommand(subcommand => subcommand.setName("set").setDescription("set").addStringOption(option => option.setName("id").setDescription("Set subsciption identifier")))
         .addSubcommand(subcommand => subcommand.setName("unset").setDescription("unset"))
+        .addSubcommand(subcommand => subcommand.setName("register").setDescription("Registriere Nutzer").addStringOption(option => option.setName("token").setDescription("Zugangstoken")))
 ]
     .map(command => command.toJSON());
 
