@@ -1,11 +1,20 @@
 import db from "../../db/index.mjs";
+import validateCommandOptions from "./utils/Validations.mjs";
+import parseCommand from "minimist";
 
 let unsubscribe = {
-    execute: async (ctx) => {
-        let channel_post = ctx.update.channel_post ?? ctx.update.message;
+    data: {
+        options: ['_', 'target'],
+        mandatory: ['source']
+    },
+    execute: async function (ctx) {
 
-        let [, , subscriptionIdentifier, inputTelegramChannelId] = channel_post.text.split(' ');
-        let telegramChannelId = inputTelegramChannelId ?? channel_post.chat.id.toString();
+        let channel_post = ctx.update.channel_post ?? ctx.update.message;
+        let commandOptions = parseCommand(channel_post.text.split(' ').slice(2));
+        if (!await validateCommandOptions(this, commandOptions, ctx)) return;
+
+       // let [, , subscriptionIdentifier, inputTelegramChannelId] = channel_post.text.split(' ');
+        let telegramChannelId = commandOptions.target.toString() ?? channel_post.chat.id.toString();
 
         let telegramChannel = await db.TelegramChannel.findOne({
             where: {
@@ -14,7 +23,7 @@ let unsubscribe = {
         });
         let discordChannel = await db.DiscordChannel.findOne({
             where: {
-                subscriptionIdentifier
+                subscriptionIdentifier: commandOptions.source.toString()
             }
         });
         await db.Subscription.destroy({

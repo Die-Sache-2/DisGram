@@ -1,23 +1,17 @@
 import db from "../../db/index.mjs";
+import validateCommandOptions from "./utils/Validations.mjs";
+import parseCommand from 'minimist';
 
 let subscribe = {
-    execute: async (ctx) => {
+    data: {
+        options: ['_', 'target', 'retention-time'],
+        mandatory: ['source']
+    },
+    execute: async function (ctx) {
         let channel_post = ctx.update.channel_post ?? ctx.update.message;
-
-        let [, , subscriptionIdentifier, inputTelegramChannelId] = channel_post.text.split(' ');
-        let telegramChannelId = inputTelegramChannelId ?? channel_post.chat.id.toString();
-
-        let userCount = await db.TelegramUser.count({
-            where: {
-                userId:  ctx.update.message.from.id
-            }
-        })
-
-        if(!userCount){
-            ctx.reply('Fehlende Berechtigungen für diesen Befehl!');
-            return;
-        }
-
+        let commandOptions = parseCommand(channel_post.text.split(' ').slice(2));
+        if (!await validateCommandOptions(this, commandOptions, ctx)) return;
+        let telegramChannelId = commandOptions.target.toString() ?? channel_post.chat.id.toString();
         let channelCount = await db.TelegramChannel.count({
             where: {
                 channelId: telegramChannelId
@@ -36,14 +30,21 @@ let subscribe = {
         });
         let discordChannel = await db.DiscordChannel.findOne({
             where: {
-                subscriptionIdentifier: subscriptionIdentifier
+                subscriptionIdentifier: commandOptions.source
+            }
+        });
+        let user = await db.TelegramUser.findOne({
+            where: {
+                userId: ctx.update.message.from.id.toString()
             }
         });
         await db.Subscription.create({
             TelegramChannelId: telegramChannel.dataValues.id,
-            DiscordChannelId: discordChannel.dataValues.id
+            DiscordChannelId: discordChannel.dataValues.id,
+            TelegramUserId: user.dataValues.id,
+            retentionTime: Number(commandOptions['retention-time'])
         });
-        ctx.reply("Der angegebene Kanal hat nun den gewünschten Discord Kanal abonniert!");
+        ctx.reply(`Dieser Kanal hat nun den Discord Kanal ${discordChannel.dataValues.channelName} abonniert!`);
     }
 }
 export default subscribe;

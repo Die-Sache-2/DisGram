@@ -20,6 +20,9 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             type: Sequelize.UUID,
         },
+        retentionTime: {
+            type: Sequelize.INTEGER
+        }
     }, {
         sequelize,
         modelName: 'Subscription',

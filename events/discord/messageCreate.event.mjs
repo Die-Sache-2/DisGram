@@ -2,7 +2,7 @@ import db from '../../db/index.mjs';
 import { telegramBot } from '../../bots/index.mjs';
 
 let messageCreate = async message => {
-    let subscriptionPromise = await db.Subscription.findAll({
+    let subscriptions = await db.Subscription.findAll({
         include: [
             {
                 model: db.DiscordChannel,
@@ -12,19 +12,24 @@ let messageCreate = async message => {
                 model: db.TelegramChannel,
                 attributes: ["channelId"]
             },
-
         ]
     })
 
-    let subscriptions = subscriptionPromise.map(it => it.dataValues).map(it => ({
+    let parsedSubscriptions = subscriptions.map(it => it.dataValues).map(it => ({
         discordChannelId: it.DiscordChannel.dataValues.channelId,
-        telegramChannelId: it.TelegramChannel.dataValues.channelId
+        telegramChannelId: it.TelegramChannel.dataValues.channelId,
+        retentionTime: it.retentionTime
     }));
 
-    for (let subscription of subscriptions) {
-        let { telegramChannelId, discordChannelId } = subscription;
+    for (let subscription of parsedSubscriptions)  {
+        let { telegramChannelId, discordChannelId, retentionTime } = subscription;
         if (message.channelId === discordChannelId) {
-            telegramBot.telegram.sendMessage(telegramChannelId, message.content);
+            let telegramMessage = await telegramBot.telegram.sendMessage(telegramChannelId, message.content);
+            if (subscription.retentionTime) {
+                setTimeout(() => {
+                    telegramBot.telegram.deleteMessage(telegramChannelId, telegramMessage.message_id);
+                }, 1000 * 60 * retentionTime);
+            }
         }
     }
 }
