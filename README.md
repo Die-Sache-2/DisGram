@@ -1,1 +1,12 @@
 # DisGram
+## Schritt für Schritt Anleitung
+Der Bot wird bereits im Internet gehostet und mit folgender Schritt für Schritt Anleitung kann man ihn nutzen, um Discord Kanäle in Telegram Kanälen zu abonnieren. Der Bot ist mit einem Registrierungstoken geschützt und ohne diesen Token kann man ihn nicht nutzen, aber jedem steht es frei den Bot selbst zu hosten. 
+1. Füge den Bot deinem Discord Server hinzu indem du auf [diesen Link](https://discordapp.com/oauth2/authorize?&client_id=1011564192182046780&scope=bot&permissions=2147486720) klickst und den Anweisungen folgst.
+2. Füge [diesen Telegram bot](t.me/DisGram_die_sache_bot) deinem Telegram Kanal hinzu.
+3. Geh auf deinen Discord Server in irgendeinen Discord Kanal und registriere deinen Discord User mit dem Befehl `/disgram register token <Registrierungstoken>`
+4. Mache deinen Kanal abonnierbar indem du den Befehl `/disgram set id <identifier>` eingibst. Der Identifier wird verwendet, um auf Telegramseite diesen Kanal abonnieren zu können. Es ist optional den Identifier zu setzen. Setzt man keinen expliziten Identifier wird automatisch der Kanalname als Identifier verwendet.
+5. Starte einen privaten Chat mit dem Telegram Bot und gebe den Befehl `/disgram register --token=<Registrierungstoken>` ein, um deinen Telegram User zu registrieren.
+6. Abonniere den Discord Kanal auf Telegram durch den Befehl `/disgram subscribe --source=<discord kanal identifier> --target=<telegram kanal id> --retention-time=<retention time>`.
+Der Befehl kann überall eingegeben werden, wo der Bot hinzugefügt wurde. Es wird empfohlen diesen Befehl in einem privaten Chat einzugeben. Die Telegram Id des Kanals bekommt man über die [Telegram web app](https://web.telegram.org). In der Web App geht man auf den gewünschten Kanal und schaut sich die Url an. Eine Beispiel url sieht so aus
+`https://web.telegram.org/k/#-1720142932`. Die Kanal id ergibt sich aus der Zahl am Ende der Url inklusive des Minus. Man muss dabei noch eine 100 einfügen. Die Kanal id ist dann `-1001720142932`. Alternativ kann man auch die target Option weglassen. Dann wird die Id des Kanals genommen in dem man den Befehl eingegeben hat. Der Nachteil ist, dass dann jeder Abonnent des Kanals diesen Befehl sieht, da Telegram keine Möglichkeiten anbietet den Befehl zu verstecken. Die Option `retention-time` ist ebenfalls optional und ist eine Zeitdauer in Minuten nach der die Beiträge im Telegram Kanal wieder gelöscht werden. Wird dieser Parameter weggelassen, werden die abonnierten Beiträge durch den Bot nie gelöscht. 
+
