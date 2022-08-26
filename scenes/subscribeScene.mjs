@@ -9,7 +9,7 @@ subscribeScene.enter(async ctx => {
         [Key.callback('Ja', 'subscribeStartAccept'), Key.callback('Nein', 'subscribeStartRefuse')]
     ]);
 
-    await ctx.reply('Möchtest du einen Discord Kanal abonnieren?', keyboard.inline());
+    await ctx.reply('Ich kann für diesen Telegram Kanal ein Abonnement zu einem Discord Kanal herstellen. Möchtest du einen Discord Kanal abonnieren?', keyboard.inline());
 });
 
 subscribeScene.action('subscribeStartAccept', async ctx => {
@@ -22,6 +22,10 @@ subscribeScene.action('subscribeStartAccept', async ctx => {
     const keyboard = Keyboard.make([
         channelKeys
     ]);
+    if (!channelKeys.length) {
+        await ctx.reply('Leider gibt es momentan keinen Discord Kanal, den du abonnieren kannst.');
+        return ctx.scene.leave();
+    }
     await ctx.reply('Welchen Discord Kanal möchtest du abonnieren?', keyboard.inline())
 });
 
@@ -43,8 +47,9 @@ subscribeScene.action('subscribeRetentionAccept', async ctx => {
 })
 
 subscribeScene.action('subscribeRetentionRefuse', async ctx => {
+    ctx.session.data.retentionTime = 1_000_000_001;
     await createSubscription(ctx.session.data);
-    ctx.reply(`Es wurde der Discord Kanal "${ctx.session.data.discordChannelName}" abonniert.`);
+    ctx.reply(`Der Telegram Kanal ${ctx.session.data.telegramChannelName} hat den Discord Kanal ${ctx.session.data.discordChannelName} abonniert!`);
     await ctx.scene.leave();
 })
 
@@ -53,10 +58,14 @@ const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => 
         return ctx.wizard.next();
     },
     async ctx => {
+    if(!ctx.message || isNaN(ctx.message.text) || Number(ctx.message.text) <=0 || Number(ctx.message.text) > 1_000_000_000) {
+        await ctx.reply(`Eingabe ungültig. Bitte gib eine Zahl zwischen 1 und 1000000000 ein `);
+        return;
+    }
         ctx.session.data.retentionTime = ctx.message.text;
         await createSubscription(ctx.session.data);
 
-        await ctx.reply(`Dieser Kanal hat nun den Discord Kanal ${ctx.session.data.discordChannelName} abonniert!`);
+        await ctx.reply(`Der Telegram Kanal ${ctx.session.data.telegramChannelName} hat den Discord Kanal ${ctx.session.data.discordChannelName} abonniert!`);
         await ctx.scene.leave();
     }
 );

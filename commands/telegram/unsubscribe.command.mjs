@@ -4,6 +4,7 @@ import parseCommand from "minimist";
 
 let unsubscribe = {
     data: {
+        name: 'unsubscribe',
         options: ['_', 'target'],
         mandatory: ['source']
     },

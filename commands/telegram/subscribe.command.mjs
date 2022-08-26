@@ -4,6 +4,7 @@ import parseCommand from 'minimist';
 
 let subscribe = {
     data: {
+        name: 'subscribe',
         options: ['_', 'target', 'retention-time'],
         mandatory: ['source']
     },

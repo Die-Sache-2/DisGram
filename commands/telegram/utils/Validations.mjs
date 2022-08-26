@@ -21,7 +21,7 @@ export default async function validateCommandOptions(command, commandOptions, ct
         }
     })
 
-    if (!userCount) {
+    if (!userCount && command.data.name !== 'register') {
         ctx.reply('Fehlende Berechtigungen für diesen Befehl!');
         return false;
     }

@@ -12,6 +12,18 @@ let register = {
             return;
         }
 
+        let userCount = await db.DiscordUser.count({
+            userId: interaction.user.id
+        })
+
+        if(userCount){
+            return interaction.reply({
+                    content: `Der Nutzer ${interaction.user.username} ist bereits registriert!`,
+                    ephemeral: true
+                }
+            );
+        }
+
         await db.DiscordUser.create({
             userId: interaction.user.id,
             name: interaction.user.username
