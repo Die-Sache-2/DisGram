@@ -13,7 +13,17 @@ subscribeScene.enter(async ctx => {
 });
 
 subscribeScene.action('subscribeStartAccept', async ctx => {
-    let channelKeys = (await db.DiscordChannel.findAll()).map(it => it.dataValues).map(it =>
+    let channelId = (await  db.TelegramChannel.findOne({
+        where: {
+            channelId: ctx.session.data.telegramChannelId.toString()
+        }
+    })).dataValues.id
+    let channelKeys = (await db.DiscordChannel.findAll({
+        include: [db.Subscription]
+    })).map(it => it.dataValues).filter(it => {
+        let a = it.Subscriptions.map(it => it.dataValues.TelegramChannelId);
+        return !a.includes(channelId);
+    }).map(it =>
         Key.callback(it.subscriptionIdentifier, 'subscribe_' + it.subscriptionIdentifier)
     )
     ctx.editMessageReplyMarkup({
@@ -23,7 +33,7 @@ subscribeScene.action('subscribeStartAccept', async ctx => {
         channelKeys
     ]);
     if (!channelKeys.length) {
-        await ctx.reply('Leider gibt es momentan keinen Discord Kanal, den du abonnieren kannst.');
+        await ctx.reply('Leider gibt es momentan keinen Discord Kanal, den du für diesen Kanal abonnieren kannst.');
         return ctx.scene.leave();
     }
     await ctx.reply('Welchen Discord Kanal möchtest du abonnieren?', keyboard.inline())
@@ -69,8 +79,6 @@ const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => 
         await ctx.scene.leave();
     }
 );
-
-
 
 async function createSubscription({telegramChannelId, discordChannelName, userId, telegramChannelName, retentionTime}) {
     let channelCount = await db.TelegramChannel.count({

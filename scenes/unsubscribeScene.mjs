@@ -52,6 +52,11 @@ unsubscribeScene.action('unsubscribeStartAccept', async ctx => {
     await ctx.reply('Für welchen Telegram Kanal möchtest du ein Abonnement aufheben?', keyboard.inline());
 })
 
+unsubscribeScene.action('unsubscribeStartRefuse', async ctx => {
+    await ctx.reply('Es wurde kein Discord Kanal deabonniert.');
+    return ctx.scene.leave();
+});
+
 unsubscribeScene.action(/unsubscribe_telegram_(.*)/, async ctx => {
     const telegramChannel = ctx.session.data.telegramChannels.find(it => it.name === ctx.match[1]);
     let subscriptions = (await db.Subscription.findAll({

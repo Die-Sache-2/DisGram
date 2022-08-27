@@ -10,7 +10,7 @@ let unsubscribe = {
         let channel_post = ctx.update.channel_post ?? ctx.update.message;
         let commandOptions = parseCommand(channel_post.text.split(' ').slice(2));
 
-        if (Object.keys.length === 1) {
+        if (Object.keys.length === 1 && ctx.update.message) {
             ctx.session.data = {userId: ctx.update.message.from.id};
             await ctx.scene.enter('UNSUBSCRIBE_SCENE_ID');
             return;

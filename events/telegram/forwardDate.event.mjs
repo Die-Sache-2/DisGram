@@ -1,6 +1,18 @@
 import db from "../../db/index.mjs";
+import {telegramBot} from "../../bots/index.mjs";
 
 let forwardDate = async ctx => {
+    try {
+        let botInfo = await telegramBot.telegram.getChatMember(ctx.update.message.forward_from_chat.id, ctx.botInfo.id);
+        if (botInfo.status !== 'administrator') {
+            ctx.reply('Ich bin in diesem Kanal kein Mitglied. Füge mich diesem Kanal als Administrator hinzu, wenn ich Discord Kanäle abonnieren soll.');
+            return;
+        }
+    } catch (error) {
+        ctx.reply('Ich bin in diesem Kanal kein Administrator. Füge mich diesem Kanal als Administrator hinzu, wenn ich Discord Kanäle abonnieren soll.');
+        return;
+    }
+
     let userCount = await db.TelegramUser.count({
         where: {
             userId: ctx.update.message.from.id.toString()
