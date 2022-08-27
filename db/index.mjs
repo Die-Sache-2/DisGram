@@ -11,7 +11,7 @@ import { Umzug, SequelizeStorage } from 'umzug';
 const db = {};
 
 let sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
-  host: 'localhost',
+  host: 'db',
   dialect: 'postgres'
 });
 

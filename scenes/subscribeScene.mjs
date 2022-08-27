@@ -1,5 +1,5 @@
-import {Key, Keyboard} from "telegram-keyboard";
-import {Scenes} from "telegraf";
+import { Key, Keyboard } from "telegram-keyboard";
+import { Scenes } from "telegraf";
 import db from "../db/index.mjs";
 
 const subscribeScene = new Scenes.BaseScene('SUBSCRIBE_SCENE_ID');
@@ -13,7 +13,18 @@ subscribeScene.enter(async ctx => {
 });
 
 subscribeScene.action('subscribeStartAccept', async ctx => {
-    let channelId = (await  db.TelegramChannel.findOne({
+    let channelCount = await db.TelegramChannel.count({
+        where: {
+            channelId: ctx.session.data.telegramChannelId.toString()
+        }
+    })
+    if (!channelCount) {
+        await db.TelegramChannel.create({
+            channelId: ctx.session.data.telegramChannelId.toString(),
+            name: ctx.session.data.telegramChannelName
+        });
+    }
+    let channelId = (await db.TelegramChannel.findOne({
         where: {
             channelId: ctx.session.data.telegramChannelId.toString()
         }
@@ -27,7 +38,7 @@ subscribeScene.action('subscribeStartAccept', async ctx => {
         Key.callback(it.subscriptionIdentifier, 'subscribe_' + it.subscriptionIdentifier)
     )
     ctx.editMessageReplyMarkup({
-        reply_markup: {remove_keyboard: true}
+        reply_markup: { remove_keyboard: true }
     })
     const keyboard = Keyboard.make([
         channelKeys
@@ -64,14 +75,14 @@ subscribeScene.action('subscribeRetentionRefuse', async ctx => {
 })
 
 const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => {
-        await ctx.reply('Bitte gebe eine Aufbewahrungszeit in Minuten an.')
-        return ctx.wizard.next();
-    },
+    await ctx.reply('Bitte gebe eine Aufbewahrungszeit in Minuten an.')
+    return ctx.wizard.next();
+},
     async ctx => {
-    if(!ctx.message || isNaN(ctx.message.text) || Number(ctx.message.text) <=0 || Number(ctx.message.text) > 1_000_000_000) {
-        await ctx.reply(`Eingabe ungültig. Bitte gib eine Zahl zwischen 1 und 1000000000 ein `);
-        return;
-    }
+        if (!ctx.message || isNaN(ctx.message.text) || Number(ctx.message.text) <= 0 || Number(ctx.message.text) > 1_000_000_000) {
+            await ctx.reply(`Eingabe ungültig. Bitte gib eine Zahl zwischen 1 und 1000000000 ein `);
+            return;
+        }
         ctx.session.data.retentionTime = ctx.message.text;
         await createSubscription(ctx.session.data);
 
@@ -80,18 +91,8 @@ const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => 
     }
 );
 
-async function createSubscription({telegramChannelId, discordChannelName, userId, telegramChannelName, retentionTime}) {
-    let channelCount = await db.TelegramChannel.count({
-        where: {
-            channelId: telegramChannelId.toString()
-        }
-    })
-    if (!channelCount) {
-        await db.TelegramChannel.create({
-            channelId: telegramChannelId.toString(),
-            name: telegramChannelName
-        });
-    }
+async function createSubscription({ telegramChannelId, discordChannelName, userId, telegramChannelName, retentionTime }) {
+
     let telegramChannel = await db.TelegramChannel.findOne({
         where: {
             channelId: telegramChannelId.toString()

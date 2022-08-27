@@ -17,6 +17,7 @@ services:
       dockerfile: ./docker/Dockerfile
     depends_on:
       - db
+    restart: always
 
 volumes:
   disgram:
