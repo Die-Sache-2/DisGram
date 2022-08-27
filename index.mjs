@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { discordBot, telegramBot } from './bots/index.mjs';
 import { discordEvents, telegramEvents } from './events/index.mjs';
 import session from '@telegraf/session';
-import stage from './scenes/subscribeScene.mjs';
+import stage from './scenes/index.mjs';
 
 
 discordBot.on('interactionCreate', discordEvents.interactionCreate);

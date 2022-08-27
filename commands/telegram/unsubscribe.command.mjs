@@ -4,17 +4,20 @@ import parseCommand from "minimist";
 
 let unsubscribe = {
     data: {
-        name: 'unsubscribe',
-        options: ['_', 'target'],
-        mandatory: ['source']
-    },
-    execute: async function (ctx) {
+        name: 'unsubscribe', options: ['_', 'target'], mandatory: ['source']
+    }, execute: async function (ctx) {
 
         let channel_post = ctx.update.channel_post ?? ctx.update.message;
         let commandOptions = parseCommand(channel_post.text.split(' ').slice(2));
+
+        if (Object.keys.length === 1) {
+            ctx.session.data = {userId: ctx.update.message.from.id};
+            await ctx.scene.enter('UNSUBSCRIBE_SCENE_ID');
+            return;
+        }
+
         if (!await validateCommandOptions(this, commandOptions, ctx)) return;
 
-       // let [, , subscriptionIdentifier, inputTelegramChannelId] = channel_post.text.split(' ');
         let telegramChannelId = commandOptions.target.toString() ?? channel_post.chat.id.toString();
 
         let telegramChannel = await db.TelegramChannel.findOne({
@@ -29,8 +32,7 @@ let unsubscribe = {
         });
         await db.Subscription.destroy({
             where: {
-                TelegramChannelId: telegramChannel.dataValues.id,
-                DiscordChannelId: discordChannel.dataValues.id
+                TelegramChannelId: telegramChannel.dataValues.id, DiscordChannelId: discordChannel.dataValues.id
             }
         });
     }

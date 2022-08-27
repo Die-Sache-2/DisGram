@@ -70,7 +70,7 @@ const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => 
     }
 );
 
-const stage = new Scenes.Stage([subscribeScene, retentionWizard]);
+
 
 async function createSubscription({telegramChannelId, discordChannelName, userId, telegramChannelName, retentionTime}) {
     let channelCount = await db.TelegramChannel.count({
@@ -107,4 +107,4 @@ async function createSubscription({telegramChannelId, discordChannelName, userId
     });
 }
 
-export default stage;
+export default [subscribeScene, retentionWizard];
