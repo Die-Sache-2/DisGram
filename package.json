@@ -26,6 +26,7 @@
     "@telegraf/session": "^1.0.1",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.1",
+    "long-settimeout": "^1.0.1",
     "minimist": "^1.2.6",
     "pg": "^8.7.3",
     "quoted-string-space-split": "^1.1.1",

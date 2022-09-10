@@ -11,7 +11,17 @@ let register = {
     execute: async function (ctx) {
         let command = ctx.update.channel_post ?? ctx.update.message;
         let commandOptions = parseCommand(command.text.split(' ').slice(2));
+
+        if(!commandOptions.token){
+            ctx.session.data = {
+                userId: ctx.update.message.from.id.toString(),
+                name: ctx.update.message.from.first_name
+            }
+            return await ctx.scene.enter('REGISTER_SCENE_ID');
+        }
+
         if (!await validateCommandOptions(this, commandOptions, ctx)) return;
+
 
         if (commandOptions.token !== process.env.TOKEN) {
             await ctx.reply("Ungültiger Token. Registrierung verweigert!");

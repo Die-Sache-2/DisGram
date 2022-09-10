@@ -10,7 +10,10 @@ export default (sequelize, DataTypes) => {
                 onDelete: 'CASCADE'
             });
             this.belongsTo(models.TelegramChannel);
-            this.belongsTo(models.TelegramUser);
+            this.belongsTo(models.TelegramUser, {
+                foreignKeyConstraint: true,
+                onDelete: 'CASCADE'
+            });
         }
     }
     Subscription.init({

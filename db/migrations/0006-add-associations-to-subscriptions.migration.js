@@ -26,6 +26,7 @@ async function up({ context: queryInterface }) {
             model: 'TelegramUsers',
             key: 'id',
         },
+        onDelete: 'CASCADE',
     });
 }
 

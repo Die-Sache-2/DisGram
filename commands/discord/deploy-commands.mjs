@@ -7,6 +7,7 @@ const commands = [
         .addSubcommand(subcommand => subcommand.setName("set").setDescription("set").addStringOption(option => option.setName("id").setDescription("Set subsciption identifier")))
         .addSubcommand(subcommand => subcommand.setName("unset").setDescription("unset"))
         .addSubcommand(subcommand => subcommand.setName("register").setDescription("Registriere Nutzer").addStringOption(option => option.setName("token").setDescription("Zugangstoken")))
+        .addSubcommand(subcommand => subcommand.setName("signature").setDescription("Erstelle Signatur"))
 ]
     .map(command => command.toJSON());
 
