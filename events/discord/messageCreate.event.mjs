@@ -1,14 +1,8 @@
 import db from '../../db/index.mjs';
 import { telegramBot } from '../../bots/index.mjs';
-import {setLongTimeout} from "long-settimeout";
-import validatePrivileges from "./Validation.mjs";
+import { setLongTimeout } from "long-settimeout";
 
 let messageCreate = async message => {
-    if(!(await validatePrivileges(message))){
-        return;
-    }
-
-
     let subscriptions = await db.Subscription.findAll({
         include: [
             {
@@ -28,7 +22,7 @@ let messageCreate = async message => {
         retentionTime: it.retentionTime
     }));
 
-    for (let subscription of parsedSubscriptions)  {
+    for (let subscription of parsedSubscriptions) {
         let { telegramChannelId, discordChannelId, retentionTime } = subscription;
         if (message.channelId === discordChannelId) {
             let telegramMessage = await telegramBot.telegram.sendMessage(telegramChannelId, await appendSignature(message.content), { parse_mode: 'MarkdownV2' });
@@ -41,7 +35,7 @@ let messageCreate = async message => {
     }
 }
 
-async function appendSignature(content){
+async function appendSignature(content) {
     let signature = (await db.Signature.findAll())[0]?.dataValues?.content;
     return content + (signature ? '\n\n' + signature : '');
 }

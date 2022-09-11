@@ -79,8 +79,8 @@ const retentionWizard = new Scenes.WizardScene('RETENTION_WIZARD', async ctx => 
     return ctx.wizard.next();
 },
     async ctx => {
-        if (!ctx.message || isNaN(ctx.message.text) || Number(ctx.message.text) <= 0 || Number(ctx.message.text) > 1_000_000_000) {
-            await ctx.reply(`Eingabe ungültig. Bitte gib eine Zahl zwischen 1 und 1000000000 ein `);
+        if (!ctx.message || !Number.isInteger(Number(ctx.message.text)) || Number(ctx.message.text) <= 0 || Number(ctx.message.text) > 1_000_000_000) {
+            await ctx.reply(`Eingabe ungültig. Bitte gib eine ganze Zahl zwischen 1 und 1 000 000 000 ein.`);
             return;
         }
         ctx.session.data.retentionTime = ctx.message.text;

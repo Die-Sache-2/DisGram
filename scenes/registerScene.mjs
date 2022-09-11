@@ -9,17 +9,6 @@ registerScene.enter(async ctx => {
         [Key.callback('Ja', 'registerStartAccept'), Key.callback('Nein', 'registerStartRefuse')]
     ]);
 
-    let userCount =  await db.TelegramUser.count({
-        where: {
-            userId: ctx.session.data.userId.toString()
-        }
-    })
-
-    if(userCount){
-        await ctx.reply(`Der Nutzer ${ctx.update.message.from.first_name} ist bereits registriert!`);
-        return;
-    }
-
     await ctx.reply('Möchtest du dich registrieren, um Discord Kanäle abonnieren zu können?', keyboard.inline());
 });
 
@@ -27,33 +16,27 @@ registerScene.action('registerStartAccept', async ctx => {
     await ctx.scene.enter('TOKEN_WIZARD');
 });
 
-
 registerScene.action('registerStartRefuse', async ctx => {
     ctx.reply(`Es erfolgte keine Registrierung!`);
     await ctx.scene.leave();
 })
 
 const tokenWizard = new Scenes.WizardScene('TOKEN_WIZARD', async ctx => {
-        await ctx.reply('Bitte gebe den Registrierungstoken ein.')
-        return ctx.wizard.next();
-    },
+    await ctx.reply('Bitte gebe den Registrierungstoken ein.')
+    return ctx.wizard.next();
+},
     async ctx => {
-
-        if(process.env.TOKEN !== ctx.message.text){
+        if (process.env.TOKEN !== ctx.message.text) {
             await ctx.reply("Ungültiger Token. Registrierung verweigert!");
-            return;
+            return ctx.scene.leave();
         }
-
-
-
-       await createRegistration(ctx.session.data);
-
+        await createRegistration(ctx.session.data);
         await ctx.reply(`Der Nutzer ${ctx.update.message.from.first_name} wurde erfolgreich registriert!`);
-        await ctx.scene.leave();
+        return await ctx.scene.leave();
     }
 );
 
-async function createRegistration({userId, name}){
+async function createRegistration({ userId, name }) {
     await db.TelegramUser.create({
         userId,
         name

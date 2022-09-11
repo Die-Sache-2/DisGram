@@ -1,19 +1,13 @@
-import parseCommand from "minimist";
-import validateCommandOptions from "./utils/Validations.mjs";
+import { validateTelegramRegistration } from "../../utils/Validations.mjs";
 
 let unregister = {
     data: {
         name: 'unregister',
-        options: ['_'],
-        mandatory: []
     },
     execute: async function (ctx) {
-        let command = ctx.update.channel_post ?? ctx.update.message;
-        let commandOptions = parseCommand(command.text.split(' ').slice(2));
-
-        if (!await validateCommandOptions(this, commandOptions, ctx)) return;
-
-
+        if (!await validateTelegramRegistration(ctx.update.message.from.id.toString())) {
+            return await ctx.reply(`Der Nutzer ${ctx.update.message.from.first_name} ist bereits nicht registriert.`);
+        }
         ctx.session.data = {
             userId: ctx.update.message.from.id.toString(),
             name: ctx.update.message.from.first_name

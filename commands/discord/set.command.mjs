@@ -1,55 +1,39 @@
 import db from '../../db/index.mjs';
-import {discordBot} from '../../bots/index.mjs';
+import { discordBot } from '../../bots/index.mjs';
+import { validateDiscordRegistration, validateSubscribableDiscordChannel } from '../../utils/Validations.mjs';
 
 
 let set = {
     execute: async interaction => {
-
-        let user = await db.DiscordUser.findOne({
-            where: {
-                userId: interaction.user.id
+        if (!await validateDiscordRegistration(interaction.user.id)) {
+            return await interaction.reply({
+                content: "Fehlende Berechtigungen für diesen Befehl!",
+                ephemeral: true
             }
-        });
-
-        if (!user) {
-            await interaction.reply({
-                    content: "Fehlende Berechtigungen für diesen Befehl!",
-                    ephemeral: true
-                }
-            );
-            return;
+            )
         }
 
-        let channelId = interaction.channelId;
-
-        let subscribedChannel = await db.DiscordChannel.findOne({
-            where: {
-                channelId
+        if (await validateSubscribableDiscordChannel(interaction.channelId)) {
+            return await interaction.reply({
+                content: "Dieser Kanal ist bereits abonnierbar!",
+                ephemeral: true
             }
-        });
-
-        if (subscribedChannel) {
-            await interaction.reply({
-                    content: "Dieser Kanal ist bereits abonnierbar!",
-                    ephemeral: true
-                }
             );
-            return;
         }
 
         let channelName = discordBot.channels.cache.get(interaction.channelId).name;
         let subscriptionIdentifier = interaction.options.getString("id") ?? discordBot.channels.cache.get(interaction.channelId).name;
 
         await db.DiscordChannel.create({
-            channelId,
+            channelId: interaction.channelId,
             channelName,
             subscriptionIdentifier
         });
 
         await interaction.reply({
-                content: `Dieser Kanal ist nun unter dem Namen ${subscriptionIdentifier} abonnierbar!`,
-                ephemeral: true
-            }
+            content: `Dieser Kanal ist nun unter dem Namen ${subscriptionIdentifier} abonnierbar!`,
+            ephemeral: true
+        }
         );
     }
 }

@@ -1,8 +1,16 @@
-import modal from "../../modals/signatureModal.mjs";
+import modal from "../../modals/signature.modal.mjs";
+import { validateDiscordRegistration } from "../../utils/Validations.mjs";
 let signature = {
     execute: async interaction => {
-            await interaction.showModal(modal);
+        if (!await validateDiscordRegistration(interaction.user.id)) {
+            return await interaction.reply({
+                content: "Fehlende Berechtigungen für diesen Befehl!",
+                ephemeral: true
+            }
+            )
         }
+        await interaction.showModal(modal.form);
+    }
 }
 
 export default signature;
