@@ -1,4 +1,49 @@
 # DisGram
+## Model
+
+```mermaid
+classDiagram
+class Subscription{
+    - id: UUID
+    - retentionTime: Integer
+}
+class TelegramChannel {
+    - id: UUID
+    - channelId: String
+    - name: String
+}
+class DiscordChannel {
+    - id: UUID
+    - channelId: String
+    - channelName: String
+    - subscriptionIdentifier: String
+}
+class Signature {
+    - id: UUID
+    - content: String
+}
+class DiscordUser {
+    - id: UUID
+    - userId: String
+    - name: String
+}
+class TelegramUser {
+    - id: UUID
+    - userId: String
+    - name: String
+}
+class MessageLink {
+    - id: UUID
+    - discordMessageId: String
+    - telegramMessageId: String
+}
+DiscordChannel "1" -- "*" Subscription
+TelegramUser "1" -- "*" Subscription
+TelegramChannel "1" -- "*" Subscription
+DiscordUser "1" -- "1" Signature
+Subscription "1" -- "*" MessageLink
+DiscordChannel "*" -- "1" DiscordUser
+```
 ## Schritt für Schritt Anleitung
 Der Bot wird bereits im Internet gehostet und mit folgender Schritt für Schritt Anleitung kann man ihn nutzen, um Discord
 Kanäle in Telegram Kanälen zu abonnieren. Der Bot ist mit einem Registrierungstoken geschützt und ohne diesen Token kann 
