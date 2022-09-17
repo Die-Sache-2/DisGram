@@ -1,0 +1,41 @@
+classDiagram
+class Subscription{
+    - id: UUID
+    - retentionTime: Integer
+}
+class TelegramChannel {
+    - id: UUID
+    - channelId: String
+    - name: String
+}
+class DiscordChannel {
+    - id: UUID
+    - channelId: String
+    - channelName: String
+    - subscriptionIdentifier: String
+}
+class Signature {
+    - id: UUID
+    - content: String
+}
+class DiscordUser {
+    - id: UUID
+    - userId: String
+    - name: String
+}
+class TelegramUser {
+    - id: UUID
+    - userId: String
+    - name: String
+}
+class MessageLink {
+    - id: UUID
+    - discordMessageId: String
+    - telegramMessageId: String
+}
+DiscordChannel "1" -- "*" Subscription
+TelegramUser "1" -- "*" Subscription
+TelegramChannel "1" -- "*" Subscription
+DiscordUser "1" -- "1" Signature
+Subscription "1" -- "*" MessageLink
+DiscordChannel "*" -- "1" DiscordUser

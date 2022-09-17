@@ -1,6 +1,7 @@
 import db from '../../db/index.mjs';
-import { telegramBot } from '../../bots/index.mjs';
-import { setLongTimeout } from "long-settimeout";
+import {telegramBot} from '../../bots/index.mjs';
+import {setLongTimeout} from "long-settimeout";
+import {markdownv2 as format} from "telegram-format";
 
 let messageCreate = async message => {
     let subscriptions = await db.Subscription.findAll({
@@ -17,15 +18,21 @@ let messageCreate = async message => {
     })
 
     let parsedSubscriptions = subscriptions.map(it => it.dataValues).map(it => ({
+        id: it.id,
         discordChannelId: it.DiscordChannel.dataValues.channelId,
         telegramChannelId: it.TelegramChannel.dataValues.channelId,
         retentionTime: it.retentionTime
     }));
 
     for (let subscription of parsedSubscriptions) {
-        let { telegramChannelId, discordChannelId, retentionTime } = subscription;
+        let {telegramChannelId, discordChannelId, retentionTime} = subscription;
         if (message.channelId === discordChannelId) {
-            let telegramMessage = await telegramBot.telegram.sendMessage(telegramChannelId, await appendSignature(message.content), { parse_mode: 'MarkdownV2' });
+            let telegramMessage = await telegramBot.telegram.sendMessage(telegramChannelId, await appendSignature(format.escape(message.content)), {parse_mode: 'MarkdownV2'});
+            await db.MessageLink.create({
+                discordMessageId: message.id.toString(),
+                telegramMessageId: telegramMessage.message_id.toString(),
+                SubscriptionId: subscription.id,
+            });
             if (subscription.retentionTime && retentionTime <= 1_000_000_000) {
                 setLongTimeout(() => {
                     telegramBot.telegram.deleteMessage(telegramChannelId, telegramMessage.message_id);

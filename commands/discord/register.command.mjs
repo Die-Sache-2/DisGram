@@ -11,7 +11,7 @@ let register = {
             );
         }
         let token = interaction.options.getString('token');
-        if (token !== process.env.TOKEN) {
+        if (token !== process.env.DISCORD_TOKEN) {
             await interaction.reply({
                 content: "Ungültiger Token. Registrierung verweigert!",
                 ephemeral: true

@@ -6,6 +6,7 @@ import Subscription from './models/Subscription.model.mjs';
 import DiscordUser from './models/DiscordUser.model.mjs';
 import TelegramUser from './models/TelegramUser.model.mjs';
 import Signature from './models/Signature.model.mjs';
+import MessageLink from './models/MessageLink.model.mjs'
 import Sequelize from 'sequelize';
 import { Umzug, SequelizeStorage } from 'umzug';
 
@@ -33,6 +34,7 @@ db.Subscription = Subscription(sequelize, Sequelize.DataTypes);
 db.DiscordUser = DiscordUser(sequelize, Sequelize.DataTypes);
 db.TelegramUser = TelegramUser(sequelize, Sequelize.DataTypes);
 db.Signature = Signature(sequelize, Sequelize.DataTypes);
+db.MessageLink = MessageLink(sequelize, Sequelize.DataTypes);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

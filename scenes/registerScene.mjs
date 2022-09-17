@@ -26,7 +26,7 @@ const tokenWizard = new Scenes.WizardScene('TOKEN_WIZARD', async ctx => {
     return ctx.wizard.next();
 },
     async ctx => {
-        if (process.env.TOKEN !== ctx.message.text) {
+        if (process.env.TELEGRAM_TOKEN !== ctx.message.text) {
             await ctx.reply("Ungültiger Token. Registrierung verweigert!");
             return ctx.scene.leave();
         }
