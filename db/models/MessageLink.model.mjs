@@ -5,7 +5,10 @@ import Sequelize, {Model} from 'sequelize';
 export default (sequelize, DataTypes) => {
     class MessageLink extends Model {
         static associate(models) {
-            this.belongsTo(models.Subscription);
+            this.belongsTo(models.Subscription, {
+                foreignKeyConstraint: true,
+                onDelete: 'CASCADE'
+            });
         }
     }
 

@@ -15,6 +15,9 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
+    environment:
+      - PG_HOST=db
+      - NODE_ENV=production
     depends_on:
       - db
     restart: always

@@ -21,7 +21,8 @@ async function up({context: queryInterface}) {
             references: {
                 model: 'Subscriptions',
                 key: 'id',
-            }
+            },
+            onDelete: 'CASCADE',
         },
         createdAt: {
             allowNull: false,
