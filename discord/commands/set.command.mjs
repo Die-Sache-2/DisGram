@@ -1,5 +1,5 @@
 import db from '../../db/index.mjs';
-import { discordBot } from '../../bots/index.mjs';
+import discordBot from '../index.mjs';
 import { validateDiscordRegistration, validateSubscribableDiscordChannel } from '../../utils/Validations.mjs';
 
 

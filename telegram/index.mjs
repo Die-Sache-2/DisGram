@@ -1,8 +1,8 @@
 import { Telegraf } from 'telegraf';
-import { telegramEvents } from '../events/index.mjs';
+import telegramEvents from './events/index.mjs';
 import session from '@telegraf/session';
-import stage from '../scenes/index.mjs';
-import telegramCommands from '../commands/telegram/index.mjs';
+import stage from './scenes/index.mjs';
+import telegramCommands from './commands/index.mjs';
 
 let telegramBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 telegramBot.use(session());

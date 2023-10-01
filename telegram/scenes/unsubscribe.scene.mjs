@@ -1,6 +1,6 @@
 import {Key, Keyboard} from "telegram-keyboard";
 import {Scenes} from "telegraf";
-import db from "../db/index.mjs";
+import db from "../../db/index.mjs";
 
 const unsubscribeScene = new Scenes.BaseScene('UNSUBSCRIBE_SCENE_ID');
 

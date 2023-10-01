@@ -1,6 +1,6 @@
 import { Key, Keyboard } from "telegram-keyboard";
 import { Scenes } from "telegraf";
-import db from "../db/index.mjs";
+import db from "../../db/index.mjs";
 
 const unregisterScene = new Scenes.BaseScene('UNREGISTER_SCENE_ID');
 

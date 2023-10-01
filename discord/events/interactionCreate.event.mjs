@@ -1,5 +1,5 @@
-import { discordCommands } from '../../commands/index.mjs';
-import modals from '../../modals/index.mjs';
+import discordCommands from '../commands/index.mjs';
+import modals from '../modals/index.mjs';
 
 let interactionCreate = async interaction => {
     if (interaction.type === 5) {

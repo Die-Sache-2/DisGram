@@ -8,7 +8,7 @@
     "docker:start": "docker compose -f ./docker/docker-compose.yml up -d",
     "docker:stop": "docker compose -f ./docker/docker-compose.yml down",
     "docker:build": "docker compose -f ./docker/docker-compose.yml build",
-    "deploy-commands": "node ./commands/discord/deploy-commands.mjs",
+    "deploy-commands": "node discord/commands/deploy-commands.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder } from 'discord.js';
-import db from '../db/index.mjs';
+import db from '../../db/index.mjs';
 
 const form = new ModalBuilder()
     .setCustomId('signatureModal')

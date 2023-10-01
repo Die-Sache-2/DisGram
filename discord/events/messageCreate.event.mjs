@@ -1,5 +1,5 @@
 import db from '../../db/index.mjs';
-import {telegramBot} from '../../bots/index.mjs';
+import telegramBot from '../../telegram/index.mjs';
 import {setLongTimeout} from "long-settimeout";
 import {markdownv2 as format} from "telegram-format";
 

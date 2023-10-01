@@ -1,4 +1,4 @@
-import modal from "../../modals/signature.modal.mjs";
+import modal from "../modals/signature.modal.mjs";
 import { validateDiscordRegistration } from "../../utils/Validations.mjs";
 let signature = {
     execute: async interaction => {

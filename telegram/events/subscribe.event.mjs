@@ -1,4 +1,4 @@
-import { telegramBot } from "../../bots/index.mjs";
+import telegramBot from "../index.mjs";
 import { validateTelegramRegistration } from "../../utils/Validations.mjs";
 
 let subscribe = async ctx => {

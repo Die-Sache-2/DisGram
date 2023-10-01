@@ -1,4 +1,4 @@
-import { telegramCommands } from '../../commands/index.mjs';
+import telegramCommands from '../commands/index.mjs';
 
 let channelPost = async ctx => {
     let channel_post = ctx.update.channel_post;
