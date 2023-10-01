@@ -24,6 +24,7 @@
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
     "@telegraf/session": "^1.0.1",
+    "amqplib": "^0.10.3",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.1",
     "long-settimeout": "^1.0.1",

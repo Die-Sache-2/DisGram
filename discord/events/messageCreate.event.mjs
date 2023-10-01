@@ -2,6 +2,7 @@ import db from '../../db/index.mjs';
 import telegramBot from '../../telegram/index.mjs';
 import {setLongTimeout} from "long-settimeout";
 import {markdownv2 as format} from "telegram-format";
+import rabbitmq from "../../rabbitmq/index.mjs";
 
 let messageCreate = async message => {
     let subscriptions = await db.Subscription.findAll({
@@ -27,6 +28,8 @@ let messageCreate = async message => {
     for (let subscription of parsedSubscriptions) {
         let {telegramChannelId, discordChannelId, retentionTime} = subscription;
         if (message.channelId === discordChannelId) {
+            let channel = await rabbitmq.createChannel();
+            channel.sendToQueue("task", Buffer.from(await appendSignature(format.escape(message.content))));
             let telegramMessage = await telegramBot.telegram.sendMessage(telegramChannelId, await appendSignature(format.escape(message.content)), {parse_mode: 'MarkdownV2'});
             await db.MessageLink.create({
                 discordMessageId: message.id.toString(),
