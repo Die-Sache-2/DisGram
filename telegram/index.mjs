@@ -18,6 +18,7 @@ telegramCommands.forEach((command, name) => {
 let channel = await rabbitmq.createChannel();
 await channel.assertQueue("task");
 await channel.consume("task", (msg) => {
+    console.log(msg);
     if (msg !== null) {
         console.log('Received:', msg.content.toString());
         channel.ack(msg);

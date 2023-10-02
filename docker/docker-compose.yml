@@ -1,39 +1,15 @@
-version: "3.9"
+include:
+  - infrastructure-services.yml
 services:
-  db:
-    image: postgres
-    restart: always
-    container_name: db
-    env_file:
-      - ../.env
-    ports:
-      - '5432:5432'
-    volumes:
-      - disgram:/var/lib/postgresql/data
-
-  rabbitmq:
-    image: "rabbitmq:3.8-management-alpine"
-    restart: always
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"  # RabbitMQ default port
-      - "15672:15672"  # RabbitMQ management plugin
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-
   disgram:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
     environment:
       - PG_HOST=db
+      - RABBITMQ_HOST=rabbitmq
       - NODE_ENV=production
     depends_on:
       - db
       - rabbitmq
     restart: always
-
-volumes:
-  disgram:
-  rabbitmq_data:

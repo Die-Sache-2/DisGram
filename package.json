@@ -8,6 +8,9 @@
     "docker:start": "docker compose -f ./docker/docker-compose.yml up -d",
     "docker:stop": "docker compose -f ./docker/docker-compose.yml down",
     "docker:build": "docker compose -f ./docker/docker-compose.yml build",
+    "docker:refresh": "npm run docker:stop & npm run docker:build & npm run docker:start",
+    "docker:start:infrastructure": "docker compose -f ./docker/infrastructure-services.yml up -d",
+    "docker:stop:infrastructure": "docker compose -f ./docker/infrastructure-services.yml down",
     "deploy-commands": "node discord/commands/deploy-commands.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

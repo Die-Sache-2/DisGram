@@ -14,7 +14,8 @@ const db = {};
 
 let sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
   host: process.env.PG_HOST ?? 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
+  port: '5433'
 });
 
 const umzug = new Umzug({
